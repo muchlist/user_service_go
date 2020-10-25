@@ -14,8 +14,8 @@ func Respond(c *gin.Context, status int, body interface{}) {
 //RespondError mengembalikan error code sesuai struct Application error
 func RespondError(c *gin.Context, err *ApplicationError) {
 	if c.GetHeader("Accept") == "application/xml" {
-		c.XML(err.StatusCode, nil)
+		c.XML(err.StatusCode, err)
 		return
 	}
-	c.JSON(err.StatusCode, nil)
+	c.JSON(err.StatusCode, err)
 }
