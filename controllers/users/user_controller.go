@@ -2,12 +2,12 @@ package users
 
 import (
 	"fmt"
+	"github.com/muchlist/erru_utils_go/rest_err"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/muchlist/user_service_go/domains/users"
 	"github.com/muchlist/user_service_go/services"
-	"github.com/muchlist/user_service_go/utils/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -15,7 +15,7 @@ import (
 func Get(c *gin.Context) {
 	userID, err := primitive.ObjectIDFromHex(c.Param("user_id"))
 	if err != nil {
-		apiErr := errors.NewBadRequestError("Format userID salah")
+		apiErr := rest_err.NewBadRequestError("Format userID salah")
 		c.JSON(apiErr.Status(), apiErr)
 		return
 	}
@@ -34,7 +34,7 @@ func Insert(c *gin.Context) {
 
 	var user users.UserInput
 	if err := c.ShouldBindJSON(&user); err != nil {
-		apiErr := errors.NewBadRequestError(err.Error())
+		apiErr := rest_err.NewBadRequestError(err.Error())
 		c.JSON(apiErr.Status(), apiErr)
 		return
 	}

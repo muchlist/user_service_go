@@ -2,7 +2,7 @@ package db
 
 import (
 	"context"
-	"github.com/muchlist/user_service_go/logger"
+	"github.com/muchlist/erru_utils_go/logger"
 	"os"
 	"time"
 
