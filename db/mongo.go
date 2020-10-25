@@ -2,7 +2,7 @@ package db
 
 import (
 	"context"
-	"fmt"
+	"github.com/muchlist/user_service_go/logger"
 	"os"
 	"time"
 
@@ -16,8 +16,6 @@ const (
 )
 
 var (
-	// Client objek sebagai satu sumber database client
-	Client *mongo.Client
 	// Db objek sebagai database objek
 	Db *mongo.Database
 
@@ -37,6 +35,7 @@ func Init() (*mongo.Client, context.Context, context.CancelFunc) {
 
 	err = Client.Connect(ctx)
 	if err != nil {
+		logger.Error("MongoDb gagal dihubungkan!", err)
 		panic(err)
 	}
 
@@ -47,7 +46,7 @@ func Init() (*mongo.Client, context.Context, context.CancelFunc) {
 	// 	panic(err)
 	// }
 
-	fmt.Println("Connected to MongoDB!")
+	logger.Info("MongoDb berhasil terkoneksi!")
 
 	return Client, ctx, cancel
 }
