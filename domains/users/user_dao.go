@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,6 +20,15 @@ import (
 
 const (
 	connectTimeout = 2
+
+	keyUserColl = "user"
+
+	keyID      = "_id"
+	keyEmail   = "email"
+	keyHashPw  = "hash_pw"
+	keyName    = "name"
+	keyIsAdmin = "is_admin"
+	keyAvatar  = "avatar"
 )
 
 var (
@@ -36,22 +47,23 @@ type userDao struct {
 type userDaoInterface interface {
 	GetUser(primitive.ObjectID) (*UserResponse, rest_err.APIError)
 	InsertUser(input UserRequest) (*string, rest_err.APIError)
-	FindUser() (*UserResponseList, rest_err.APIError)
+	FindUser() (UserResponseList, rest_err.APIError)
+	CheckEmailAvailable(email string) (bool, rest_err.APIError)
 }
 
 //InsertUser menambahkan user
 func (u *userDao) InsertUser(user UserRequest) (*string, rest_err.APIError) {
 
-	coll := db.Db.Collection("user")
+	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	defer cancel()
 
 	insertDoc := bson.D{
-		{Key: "name", Value: user.Name},
-		{Key: "email", Value: user.Email},
-		{Key: "is_admin", Value: user.IsAdmin},
-		{Key: "avatar", Value: user.Avatar},
-		{Key: "hash_pw", Value: user.Password},
+		{keyName, user.Name},
+		{keyEmail, strings.ToLower(user.Email)},
+		{keyIsAdmin, user.IsAdmin},
+		{keyAvatar, user.Avatar},
+		{keyHashPw, user.Password},
 	}
 
 	result, err := coll.InsertOne(ctx, insertDoc)
@@ -69,25 +81,23 @@ func (u *userDao) InsertUser(user UserRequest) (*string, rest_err.APIError) {
 //GetUser mendapatkan user dari database berdasarkan userID
 func (u *userDao) GetUser(userID primitive.ObjectID) (*UserResponse, rest_err.APIError) {
 
-	coll := db.Db.Collection("user")
+	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	defer cancel()
 
 	var user UserResponse
 	opts := options.FindOne()
-	opts.SetProjection(bson.M{"hash_pw": 0})
+	opts.SetProjection(bson.M{keyHashPw: 0})
 
-	if err := coll.FindOne(ctx, bson.M{"_id": userID}, opts).Decode(&user); err != nil {
+	if err := coll.FindOne(ctx, bson.M{keyID: userID}, opts).Decode(&user); err != nil {
+
+		if err == mongo.ErrNoDocuments {
+			apiErr := rest_err.NewNotFoundError(fmt.Sprintf("User dengan ID %v tidak ditemukan", userID.Hex()))
+			return nil, apiErr
+		}
 
 		logger.Error("Gagal mendapatkan user dari database", err)
 		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
-		return nil, apiErr
-	}
-
-	if user.Name == "" {
-		message := fmt.Sprintf("User %v tidak ditemukan", userID)
-		logger.Info("Kembalian user dari database memiliki nama kosong")
-		apiErr := rest_err.NewBadRequestError(message)
 		return nil, apiErr
 	}
 
@@ -95,27 +105,54 @@ func (u *userDao) GetUser(userID primitive.ObjectID) (*UserResponse, rest_err.AP
 }
 
 //FindUser mendapatkan user dari database berdasarkan userID
-func (u *userDao) FindUser() (*UserResponseList, rest_err.APIError) {
+func (u *userDao) FindUser() (UserResponseList, rest_err.APIError) {
 
-	coll := db.Db.Collection("user")
+	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	defer cancel()
 
-	var users UserResponseList
+	users := UserResponseList{}
 	opts := options.Find()
-	opts.SetSort(bson.D{{"_id", -1}})
-	sortCursor, err := coll.Find(ctx, bson.M{}, opts)
+	opts.SetSort(bson.D{{keyID, -1}})
+	sortCursor, err := coll.Find(ctx, bson.M{"_id": "x"}, opts)
 	if err != nil {
 		logger.Error("Gagal mendapatkan users dari database", err)
 		apiErr := rest_err.NewInternalServerError("Database error", errors.New("database error"))
-		return nil, apiErr
+		return UserResponseList{}, apiErr
 	}
 
 	if err = sortCursor.All(ctx, &users); err != nil {
 		logger.Error("Gagal decode usersCursor ke objek slice", err)
 		apiErr := rest_err.NewInternalServerError("Database error", errors.New("database error"))
-		return nil, apiErr
+		return UserResponseList{}, apiErr
 	}
 
-	return &users, nil
+	return users, nil
+}
+
+//CheckEmailAvailable melakukan cek apakah alamat email sdh pernah ada di database
+//jika ada akan return false ,yang artinya email tidak available
+func (u *userDao) CheckEmailAvailable(email string) (bool, rest_err.APIError) {
+
+	coll := db.Db.Collection(keyUserColl)
+	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
+	defer cancel()
+
+	opts := options.FindOne()
+	opts.SetProjection(bson.M{keyID: 1})
+
+	var user UserResponse
+
+	if err := coll.FindOne(ctx, bson.M{keyEmail: strings.ToLower(email)}, opts).Decode(&user); err != nil {
+
+		if err == mongo.ErrNoDocuments {
+			return true, nil
+		}
+
+		logger.Error("Gagal mendapatkan user dari database", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		return false, apiErr
+	}
+
+	return false, nil
 }

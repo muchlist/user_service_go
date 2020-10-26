@@ -16,7 +16,7 @@ type userService struct{}
 type userServiceInterface interface {
 	GetUser(primitive.ObjectID) (*users.UserResponse, rest_err.APIError)
 	InsertUser(users.UserRequest) (*string, rest_err.APIError)
-	FindUsers() (*users.UserResponseList, rest_err.APIError)
+	FindUsers() (users.UserResponseList, rest_err.APIError)
 }
 
 //GetUser mendapatkan user dari domain
@@ -29,7 +29,7 @@ func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, r
 }
 
 //FindUsers mendapatkan users dari domain
-func (u *userService) FindUsers() (*users.UserResponseList, rest_err.APIError) {
+func (u *userService) FindUsers() (users.UserResponseList, rest_err.APIError) {
 	userList, err := users.UserDao.FindUser()
 	if err != nil {
 		return nil, err
@@ -38,6 +38,17 @@ func (u *userService) FindUsers() (*users.UserResponseList, rest_err.APIError) {
 }
 
 func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIError) {
+
+	// cek ketersediaan email
+	emailAvailable, err := users.UserDao.CheckEmailAvailable(user.Email)
+	if err != nil {
+		return nil, err
+	}
+	if !emailAvailable {
+		return nil, rest_err.NewBadRequestError("Email tidak tersedia")
+	}
+	// END cek ketersediaan email
+
 	insertedID, err := users.UserDao.InsertUser(user)
 	if err != nil {
 		return nil, err
