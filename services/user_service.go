@@ -14,12 +14,13 @@ var (
 type userService struct{}
 
 type userServiceInterface interface {
-	GetUser(primitive.ObjectID) (*users.User, *rest_err.APIError)
-	InsertUser(users.UserInput) (*string, *rest_err.APIError)
+	GetUser(primitive.ObjectID) (*users.UserResponse, rest_err.APIError)
+	InsertUser(users.UserRequest) (*string, rest_err.APIError)
+	FindUsers() (*users.UserResponseList, rest_err.APIError)
 }
 
 //GetUser mendapatkan user dari domain
-func (u *userService) GetUser(userID primitive.ObjectID) (*users.User, *rest_err.APIError) {
+func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, rest_err.APIError) {
 	user, err := users.UserDao.GetUser(userID)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,16 @@ func (u *userService) GetUser(userID primitive.ObjectID) (*users.User, *rest_err
 	return user, nil
 }
 
-func (u *userService) InsertUser(user users.UserInput) (*string, *rest_err.APIError) {
+//FindUsers mendapatkan users dari domain
+func (u *userService) FindUsers() (*users.UserResponseList, rest_err.APIError) {
+	userList, err := users.UserDao.FindUser()
+	if err != nil {
+		return nil, err
+	}
+	return userList, nil
+}
+
+func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIError) {
 	insertedID, err := users.UserDao.InsertUser(user)
 	if err != nil {
 		return nil, err

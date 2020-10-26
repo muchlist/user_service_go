@@ -22,7 +22,7 @@ func Get(c *gin.Context) {
 
 	user, apiErr := services.UserService.GetUser(userID)
 	if apiErr != nil {
-		c.JSON(http.StatusNotFound, apiErr)
+		c.JSON(apiErr.Status(), apiErr)
 		return
 	}
 
@@ -32,7 +32,7 @@ func Get(c *gin.Context) {
 //Insert menambahkan user
 func Insert(c *gin.Context) {
 
-	var user users.UserInput
+	var user users.UserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
 		apiErr := rest_err.NewBadRequestError(err.Error())
 		c.JSON(apiErr.Status(), apiErr)
@@ -41,10 +41,22 @@ func Insert(c *gin.Context) {
 
 	insertID, apiErr := services.UserService.InsertUser(user)
 	if apiErr != nil {
-		c.JSON(http.StatusNotModified, apiErr)
+		c.JSON(apiErr.Status(), apiErr)
 		return
 	}
 
 	res := gin.H{"msg": fmt.Sprintf("Register berhasil, ID: %s", *insertID)}
 	c.JSON(http.StatusOK, res)
+}
+
+//Find menampilkan list user
+func Find(c *gin.Context) {
+
+	userList, apiErr := services.UserService.FindUsers()
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"users": userList})
 }

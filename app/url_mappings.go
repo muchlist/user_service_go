@@ -6,5 +6,6 @@ import (
 
 func mapUrls() {
 	router.GET("/users/:user_id", users.Get)
+	router.GET("/users", users.Find)
 	router.POST("/users", users.Insert)
 }

@@ -35,7 +35,7 @@ if err := collection.FindOne(ctx, bson.M{}).Decode(&podcast); err != nil {
 
 opts := options.Find()
 opts.SetSort(bson.D{{"duration", -1}})
-sortCursor, err := episodeCollection.Find(ctx, bson.D){
+sortCursor, err := episodeCollection.Find(ctx, bson.D{
     {"duration", bson.D {
         {"$gt", 24}.
     }}, 
