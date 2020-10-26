@@ -28,6 +28,7 @@ func Init() (*mongo.Client, context.Context, context.CancelFunc) {
 
 	Client, err := mongo.NewClient(options.Client().ApplyURI(mongoURL))
 	if err != nil {
+		logger.Error("Gagal membuat client Mongodb", err)
 		panic(err)
 	}
 
@@ -35,7 +36,7 @@ func Init() (*mongo.Client, context.Context, context.CancelFunc) {
 
 	err = Client.Connect(ctx)
 	if err != nil {
-		logger.Error("MongoDb gagal dihubungkan!", err)
+		logger.Error("Gagal menghubungkan MongoDb", err)
 		panic(err)
 	}
 

@@ -2,13 +2,12 @@ package users
 
 import (
 	"fmt"
-	"github.com/muchlist/erru_utils_go/rest_err"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/muchlist/erru_utils_go/rest_err"
 	"github.com/muchlist/user_service_go/domains/users"
 	"github.com/muchlist/user_service_go/services"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"net/http"
 )
 
 //Get mengembalikan user
@@ -59,4 +58,42 @@ func Find(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"users": userList})
+}
+
+//Edit menampilkan list user
+func Edit(c *gin.Context) {
+
+	var user users.UserEditRequest
+	if err := c.ShouldBindJSON(&user); err != nil {
+		apiErr := rest_err.NewBadRequestError(err.Error())
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	userEdited, apiErr := services.UserService.EditUser(c.Param("user_email"), user)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, userEdited)
+}
+
+//Login
+func Login(c *gin.Context) {
+
+	var login users.UserLoginRequest
+	if err := c.ShouldBindJSON(&login); err != nil {
+		apiErr := rest_err.NewBadRequestError(err.Error())
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	response, apiErr := services.UserService.Login(login)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
 }

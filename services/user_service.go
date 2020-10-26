@@ -5,8 +5,11 @@ import (
 	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
 	"github.com/muchlist/user_service_go/domains/users"
-	"github.com/muchlist/user_service_go/utils/crypto"
+	"github.com/muchlist/user_service_go/utils/crypt"
+	"github.com/muchlist/user_service_go/utils/mjwt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strings"
+	"time"
 )
 
 var (
@@ -20,11 +23,13 @@ type userServiceInterface interface {
 	GetUser(primitive.ObjectID) (*users.UserResponse, rest_err.APIError)
 	InsertUser(users.UserRequest) (*string, rest_err.APIError)
 	FindUsers() (users.UserResponseList, rest_err.APIError)
+	EditUser(string, users.UserEditRequest) (*users.UserResponse, rest_err.APIError)
+	Login(users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError)
 }
 
 //GetUser mendapatkan user dari domain
 func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, rest_err.APIError) {
-	user, err := users.UserDao.GetUser(userID)
+	user, err := users.UserDao.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -52,17 +57,51 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 	}
 	// END cek ketersediaan email
 
-	hashPassword, errC := crypto.GenerateHash(user.Password)
+	hashPassword, errC := crypt.Obj.GenerateHash(user.Password)
 	if errC != nil {
 		logger.Error("Error pada kriptograpi", errC)
 		return nil, rest_err.NewInternalServerError("Error pada kriptograpi", errors.New("bcrypt error"))
 	}
 
 	user.Password = hashPassword
+	user.Timestamp = time.Now().Unix()
 
 	insertedID, err := users.UserDao.InsertUser(user)
 	if err != nil {
 		return nil, err
 	}
 	return insertedID, nil
+}
+
+func (u *userService) EditUser(userEmail string, request users.UserEditRequest) (*users.UserResponse, rest_err.APIError) {
+	result, err := users.UserDao.EditUser(strings.ToLower(userEmail), request)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError) {
+
+	user, err := users.UserDao.GetUserByEmailWithPassword(login.Email)
+	if err != nil {
+		return nil, rest_err.NewUnauthorizedError("Username atau password tidak valid")
+	}
+
+	if !crypt.Obj.IsPWAndHashPWMatch(login.Password, user.HashPw) {
+		return nil, rest_err.NewUnauthorizedError("Username atau password tidak valid")
+	}
+
+	token, err := mjwt.Obj.GenerateToken(user.Email, user.IsAdmin)
+
+	userResponse := users.UserLoginResponse{
+		Name:    user.Name,
+		Email:   user.Email,
+		IsAdmin: user.IsAdmin,
+		Avatar:  user.Avatar,
+		Token:   token,
+	}
+
+	return &userResponse, nil
+
 }

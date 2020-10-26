@@ -7,6 +7,9 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgrijalva/jwt-go v1.0.2 h1:KPldsxuKGsS2FPWsNeg9ZO18aCrGKujPoWXn2yo+KQM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
@@ -111,6 +114,8 @@ github.com/muchlist/erru_utils_go v0.0.0-20201025142845-c335da5e24f4 h1:0jRlC9jS
 github.com/muchlist/erru_utils_go v0.0.0-20201025142845-c335da5e24f4/go.mod h1:HWEjGhVswy35AQ3mrvTgVYisTDIKKX/XZqlwNyvDbNE=
 github.com/muchlist/erru_utils_go v0.0.0-20201025155741-6e3a52f7220e h1:08AvKQpJfkuJ4SFoj9KBRr10X5wUrjVjfmYGOcWPU6U=
 github.com/muchlist/erru_utils_go v0.0.0-20201025155741-6e3a52f7220e/go.mod h1:zpVAamBofjPsarTZrZLgiT1xl3ScUNstlLFJxtWiW4M=
+github.com/muchlist/erru_utils_go v0.0.0-20201025225639-3e187c79a8b3 h1:ctsbOuZQKKISSP11QxOEzQsdAe1RcIZrxl19kcbig8g=
+github.com/muchlist/erru_utils_go v0.0.0-20201025225639-3e187c79a8b3/go.mod h1:7ZazKpsar80eFZ2B4VWoIjY58RTAmhOYtVxQTwBdwio=
 github.com/muchlist/golang-microservices v0.0.0-20200530064040-bbb011069341 h1:B4sMSZAq9IiuxqdJBvAfkoFOueq2Z2nw5vj15Y7Jtr4=
 github.com/muchlist/golang-microservices v0.0.0-20200530064040-bbb011069341/go.mod h1:bMP+aJDNR56DD7BlUiXw+bdS0H93wuQg/aQMIj5E0kI=
 github.com/pelletier/go-toml v1.7.0/go.mod h1:vwGMzjaWMwyfHwgIBhI2YUM4fB6nL6lVAvS1LBMMhTE=
