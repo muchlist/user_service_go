@@ -1,8 +1,11 @@
 package services
 
 import (
+	"errors"
+	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
 	"github.com/muchlist/user_service_go/domains/users"
+	"github.com/muchlist/user_service_go/utils/crypto"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -48,6 +51,14 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 		return nil, rest_err.NewBadRequestError("Email tidak tersedia")
 	}
 	// END cek ketersediaan email
+
+	hashPassword, errC := crypto.GenerateHash(user.Password)
+	if errC != nil {
+		logger.Error("Error pada kriptograpi", errC)
+		return nil, rest_err.NewInternalServerError("Error pada kriptograpi", errors.New("bcrypt error"))
+	}
+
+	user.Password = hashPassword
 
 	insertedID, err := users.UserDao.InsertUser(user)
 	if err != nil {
