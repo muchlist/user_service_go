@@ -37,7 +37,7 @@ func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, r
 	return user, nil
 }
 
-//FindUsers mendapatkan user_controller dari domain
+//FindUsers mendapatkan user dari domain
 func (u *userService) FindUsers() (users.UserResponseList, rest_err.APIError) {
 	userList, err := users.UserDao.FindUser()
 	if err != nil {
