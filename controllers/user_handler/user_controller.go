@@ -121,6 +121,7 @@ func UploadImage(c *gin.Context) {
 	}
 
 	path := "static/images/" + claims.Identity + fileExtension
+	pathInDb := "images/" + claims.Identity + fileExtension
 
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
@@ -130,7 +131,7 @@ func UploadImage(c *gin.Context) {
 		return
 	}
 
-	usersResult, apiErr := users.UserDao.PutAvatar(claims.Identity, path)
+	usersResult, apiErr := users.UserDao.PutAvatar(claims.Identity, pathInDb)
 	if apiErr != nil {
 		c.JSON(apiErr.Status(), apiErr)
 		return

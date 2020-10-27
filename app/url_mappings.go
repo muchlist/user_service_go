@@ -7,6 +7,8 @@ import (
 
 func mapUrls() {
 
+	router.Static("/images", "./static/images")
+
 	api := router.Group("/api/v1")
 
 	api.POST("/login", user_handler.Login)

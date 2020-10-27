@@ -19,16 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="Err handling in userDao">
+    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="upload avatar endpoint">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/user_service_go.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/user_service_go.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/url_mappings.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/url_mappings.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/middleware/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/middleware/middleware.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/user_handler/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/user_handler/user_controller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domains/users/user_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/domains/users/user_dao.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/mjwt/my_jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/mjwt/my_jwt.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +158,8 @@
     <MESSAGE value="Login endpoint, menerapkan JWT Token" />
     <MESSAGE value="Validasi token, Middleware jwt dsb" />
     <MESSAGE value="Err handling in userDao" />
-    <option name="LAST_COMMIT_MESSAGE" value="Err handling in userDao" />
+    <MESSAGE value="upload avatar endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="upload avatar endpoint" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -194,10 +189,10 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="184" y="28" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1603666136415" />
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1603766993505">
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1603811117991">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1603766993505" />
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1603811117991" />
     <state x="262" y="-1" width="840" height="1034" key="search.everywhere.popup" timestamp="1603681422237">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
