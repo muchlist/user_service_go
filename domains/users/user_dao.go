@@ -45,13 +45,14 @@ type userDao struct {
 }
 
 type userDaoInterface interface {
-	InsertUser(UserRequest) (*string, rest_err.APIError)
-	GetUserByID(primitive.ObjectID) (*UserResponse, rest_err.APIError)
-	GetUserByEmail(string) (*UserResponse, rest_err.APIError)
-	GetUserByEmailWithPassword(string) (*User, rest_err.APIError)
+	InsertUser(user UserRequest) (*string, rest_err.APIError)
+	GetUserByID(userID primitive.ObjectID) (*UserResponse, rest_err.APIError)
+	GetUserByEmail(email string) (*UserResponse, rest_err.APIError)
+	GetUserByEmailWithPassword(email string) (*User, rest_err.APIError)
 	FindUser() (UserResponseList, rest_err.APIError)
-	CheckEmailAvailable(string) (bool, rest_err.APIError)
-	EditUser(string, UserEditRequest) (*UserResponse, rest_err.APIError)
+	CheckEmailAvailable(email string) (bool, rest_err.APIError)
+	EditUser(userEmail string, userRequest UserEditRequest) (*UserResponse, rest_err.APIError)
+	PutAvatar(email string, avatar string) (*UserResponse, rest_err.APIError)
 }
 
 //InsertUser menambahkan user
@@ -237,6 +238,38 @@ func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*User
 	if err := coll.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, rest_err.NewBadRequestError("User tidak diupdate karena ID atau timestamp tidak valid")
+		}
+
+		logger.Error("Gagal mendapatkan user dari database", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
+		return nil, apiErr
+	}
+
+	return &user, nil
+}
+
+func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_err.APIError) {
+	coll := db.Db.Collection(keyUserColl)
+	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
+	defer cancel()
+
+	opts := options.FindOneAndUpdate()
+	opts.SetReturnDocument(1)
+
+	filter := bson.M{
+		keyEmail: email,
+	}
+	update := bson.M{
+		"$set": bson.M{
+			keyAvatar:    avatar,
+			keyTimeStamp: time.Now().Unix(),
+		},
+	}
+
+	var user UserResponse
+	if err := coll.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, rest_err.NewBadRequestError(fmt.Sprintf("User avatar gagal, user dengan email %s tidak ditemukan", email))
 		}
 
 		logger.Error("Gagal mendapatkan user dari database", err)

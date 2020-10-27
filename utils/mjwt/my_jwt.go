@@ -84,13 +84,14 @@ func (j *jwtUtils) ValidateToken(tokenString string) (*jwt.Token, rest_err.APIEr
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			return nil, rest_err.NewAPIError("Token tidak valid", http.StatusUnprocessableEntity, "jwt_error", nil)
+			return nil, rest_err.NewAPIError("Token signing method salah", http.StatusUnprocessableEntity, "jwt_error", nil)
 		}
 		return secret, nil
 	})
 
+	//Jika expired akan muncul disini asalkan ada claims exp
 	if err != nil {
-		return nil, rest_err.NewAPIError("Token tidak valid", http.StatusUnprocessableEntity, "jwt_error", nil)
+		return nil, rest_err.NewAPIError("Token tidak valid", http.StatusUnprocessableEntity, "jwt_error", []interface{}{err.Error()})
 	}
 
 	return token, nil

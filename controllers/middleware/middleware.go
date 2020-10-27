@@ -4,9 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/muchlist/erru_utils_go/rest_err"
 	"github.com/muchlist/user_service_go/utils/mjwt"
-	"net/http"
 	"strings"
-	"time"
 )
 
 const (
@@ -39,12 +37,6 @@ func AuthMiddleware(c *gin.Context) {
 	claims, err := mjwt.Obj.ReadToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(err.Status(), err)
-		return
-	}
-
-	if claims.Exp < time.Now().Unix() {
-		c.AbortWithStatusJSON(http.StatusUnprocessableEntity,
-			rest_err.NewAPIError("Token expired", http.StatusUnprocessableEntity, "jwt_expired", nil))
 		return
 	}
 

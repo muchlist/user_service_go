@@ -25,6 +25,7 @@ type userServiceInterface interface {
 	FindUsers() (users.UserResponseList, rest_err.APIError)
 	EditUser(string, users.UserEditRequest) (*users.UserResponse, rest_err.APIError)
 	Login(users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError)
+	PutAvatar(email string, fileLocation string) (*users.UserResponse, rest_err.APIError)
 }
 
 //GetUser mendapatkan user dari domain
@@ -115,4 +116,13 @@ func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginRespo
 
 	return &userResponse, nil
 
+}
+
+func (u *userService) PutAvatar(email string, fileLocation string) (*users.UserResponse, rest_err.APIError) {
+	user, err := users.UserDao.PutAvatar(email, fileLocation)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

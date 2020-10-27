@@ -19,12 +19,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="Validasi token, Middleware jwt dsb">
+    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="Err handling in userDao">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/user_service_go.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/user_service_go.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/url_mappings.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/url_mappings.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/middleware/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/middleware/middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/user_handler/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/user_handler/user_controller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/domains/users/user_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/domains/users/user_dao.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/mjwt/my_jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/mjwt/my_jwt.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +163,8 @@
     <MESSAGE value="menerapkan utils bcrypt" />
     <MESSAGE value="Login endpoint, menerapkan JWT Token" />
     <MESSAGE value="Validasi token, Middleware jwt dsb" />
-    <option name="LAST_COMMIT_MESSAGE" value="Validasi token, Middleware jwt dsb" />
+    <MESSAGE value="Err handling in userDao" />
+    <option name="LAST_COMMIT_MESSAGE" value="Err handling in userDao" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
