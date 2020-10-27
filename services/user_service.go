@@ -85,7 +85,7 @@ func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginRespo
 
 	user, err := users.UserDao.GetUserByEmailWithPassword(login.Email)
 	if err != nil {
-		return nil, rest_err.NewUnauthorizedError("Username atau password tidak valid")
+		return nil, err
 	}
 
 	if !crypt.Obj.IsPWAndHashPWMatch(login.Password, user.HashPw) {

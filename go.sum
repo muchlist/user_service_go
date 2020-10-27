@@ -116,6 +116,10 @@ github.com/muchlist/erru_utils_go v0.0.0-20201025155741-6e3a52f7220e h1:08AvKQpJ
 github.com/muchlist/erru_utils_go v0.0.0-20201025155741-6e3a52f7220e/go.mod h1:zpVAamBofjPsarTZrZLgiT1xl3ScUNstlLFJxtWiW4M=
 github.com/muchlist/erru_utils_go v0.0.0-20201025225639-3e187c79a8b3 h1:ctsbOuZQKKISSP11QxOEzQsdAe1RcIZrxl19kcbig8g=
 github.com/muchlist/erru_utils_go v0.0.0-20201025225639-3e187c79a8b3/go.mod h1:7ZazKpsar80eFZ2B4VWoIjY58RTAmhOYtVxQTwBdwio=
+github.com/muchlist/erru_utils_go v0.0.0-20201026065804-7e88120eae7e h1:7ZjmO6aF+/1pn3qAvg78nMrpIN2G5hFaWTf0nL29Yg0=
+github.com/muchlist/erru_utils_go v0.0.0-20201026065804-7e88120eae7e/go.mod h1:7ZazKpsar80eFZ2B4VWoIjY58RTAmhOYtVxQTwBdwio=
+github.com/muchlist/erru_utils_go v0.0.0-20201027121138-97ca09097d65 h1:LgmtolFURESs4Ke2C8NRDRxSusH/eiUL7s+QQWjkvtM=
+github.com/muchlist/erru_utils_go v0.0.0-20201027121138-97ca09097d65/go.mod h1:7ZazKpsar80eFZ2B4VWoIjY58RTAmhOYtVxQTwBdwio=
 github.com/muchlist/golang-microservices v0.0.0-20200530064040-bbb011069341 h1:B4sMSZAq9IiuxqdJBvAfkoFOueq2Z2nw5vj15Y7Jtr4=
 github.com/muchlist/golang-microservices v0.0.0-20200530064040-bbb011069341/go.mod h1:bMP+aJDNR56DD7BlUiXw+bdS0H93wuQg/aQMIj5E0kI=
 github.com/pelletier/go-toml v1.7.0/go.mod h1:vwGMzjaWMwyfHwgIBhI2YUM4fB6nL6lVAvS1LBMMhTE=

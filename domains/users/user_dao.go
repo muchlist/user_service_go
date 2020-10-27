@@ -1,7 +1,6 @@
 package users
 
 import (
-	"errors"
 	"fmt"
 	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
@@ -73,7 +72,7 @@ func (u *userDao) InsertUser(user UserRequest) (*string, rest_err.APIError) {
 
 	result, err := coll.InsertOne(ctx, insertDoc)
 	if err != nil {
-		apiErr := rest_err.NewInternalServerError("Gagal menyimpan user ke database", errors.New("database error"))
+		apiErr := rest_err.NewInternalServerError("Gagal menyimpan user ke database", err)
 		logger.Error("Gagal menyimpan user ke database", err)
 		return nil, apiErr
 	}
@@ -101,8 +100,8 @@ func (u *userDao) GetUserByID(userID primitive.ObjectID) (*UserResponse, rest_er
 			return nil, apiErr
 		}
 
-		logger.Error("Gagal mendapatkan user dari database", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		logger.Error("gagal mendapatkan user (by ID) dari database", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return nil, apiErr
 	}
 
@@ -127,8 +126,8 @@ func (u *userDao) GetUserByEmail(email string) (*UserResponse, rest_err.APIError
 			return nil, apiErr
 		}
 
-		logger.Error("Gagal mendapatkan user dari database", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		logger.Error("gagal mendapatkan user (by email) dari database", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return nil, apiErr
 	}
 
@@ -147,12 +146,13 @@ func (u *userDao) GetUserByEmailWithPassword(email string) (*User, rest_err.APIE
 	if err := coll.FindOne(ctx, bson.M{keyEmail: strings.ToLower(email)}).Decode(&user); err != nil {
 
 		if err == mongo.ErrNoDocuments {
-			apiErr := rest_err.NewNotFoundError(fmt.Sprintf("User dengan Email %s tidak ditemukan", email))
+			// karena sudah pasti untuk keperluan login maka error yang dikembalikan unauthorized
+			apiErr := rest_err.NewUnauthorizedError("Username atau password tidak valid")
 			return nil, apiErr
 		}
 
-		logger.Error("Gagal mendapatkan user dari database", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		logger.Error("Gagal mendapatkan user dari database (GetUserByEmailWithPassword)", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return nil, apiErr
 	}
 
@@ -172,13 +172,13 @@ func (u *userDao) FindUser() (UserResponseList, rest_err.APIError) {
 	sortCursor, err := coll.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		logger.Error("Gagal mendapatkan user_handler dari database", err)
-		apiErr := rest_err.NewInternalServerError("Database error", errors.New("database error"))
+		apiErr := rest_err.NewInternalServerError("Database error", err)
 		return UserResponseList{}, apiErr
 	}
 
 	if err = sortCursor.All(ctx, &users); err != nil {
 		logger.Error("Gagal decode usersCursor ke objek slice", err)
-		apiErr := rest_err.NewInternalServerError("Database error", errors.New("database error"))
+		apiErr := rest_err.NewInternalServerError("Database error", err)
 		return UserResponseList{}, apiErr
 	}
 
@@ -205,7 +205,7 @@ func (u *userDao) CheckEmailAvailable(email string) (bool, rest_err.APIError) {
 		}
 
 		logger.Error("Gagal mendapatkan user dari database", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return false, apiErr
 	}
 
@@ -240,7 +240,7 @@ func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*User
 		}
 
 		logger.Error("Gagal mendapatkan user dari database", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", errors.New("database error"))
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return nil, apiErr
 	}
 

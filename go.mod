@@ -10,7 +10,7 @@ require (
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
-	github.com/muchlist/erru_utils_go v0.0.0-20201025225639-3e187c79a8b3
+	github.com/muchlist/erru_utils_go v0.0.0-20201027121138-97ca09097d65
 	github.com/stretchr/testify v1.6.1
 	github.com/ugorji/go v1.1.13 // indirect
 	go.mongodb.org/mongo-driver v1.4.2
