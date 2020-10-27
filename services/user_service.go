@@ -97,7 +97,7 @@ func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginRespo
 		Identity:  user.Email,
 		Name:      user.Name,
 		IsAdmin:   user.IsAdmin,
-		TimeExtra: 1,
+		TimeExtra: 30 * 24, //30 hari * 24 Jam
 		Jti:       "",
 	}
 
