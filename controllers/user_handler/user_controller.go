@@ -1,4 +1,4 @@
-package users
+package user_handler
 
 import (
 	"fmt"

@@ -171,7 +171,7 @@ func (u *userDao) FindUser() (UserResponseList, rest_err.APIError) {
 	opts.SetSort(bson.D{{keyID, -1}})
 	sortCursor, err := coll.Find(ctx, bson.M{}, opts)
 	if err != nil {
-		logger.Error("Gagal mendapatkan users dari database", err)
+		logger.Error("Gagal mendapatkan user_handler dari database", err)
 		apiErr := rest_err.NewInternalServerError("Database error", errors.New("database error"))
 		return UserResponseList{}, apiErr
 	}

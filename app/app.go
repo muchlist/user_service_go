@@ -16,13 +16,11 @@ func init() {
 // StartApp memulai http server
 func StartApp() {
 
-	// inisiasi database, memutus koneksi database dan membatalkan
-	// context jika program berakhir
 	client, ctx, cancel := db.Init()
 	defer client.Disconnect(ctx)
 	defer cancel()
 
-	// mapping urls ada di file url_mappings.go
+	// mapping urls file url_mappings.go
 	mapUrls()
 
 	err := router.Run(":8080")

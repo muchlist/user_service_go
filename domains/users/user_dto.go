@@ -53,11 +53,11 @@ type UserLoginRequest struct {
 
 //UserLoginResponse
 type UserLoginResponse struct {
-	Email   string `json:"email" bson:"email" binding:"required,email"`
-	Name    string `json:"name" bson:"name" binding:"required"`
-	IsAdmin bool   `json:"is_admin" bson:"is_admin"`
-	Avatar  string `json:"avatar" bson:"avatar"`
-	Token   string `json:"token"`
+	Email       string `json:"email" bson:"email" binding:"required,email"`
+	Name        string `json:"name" bson:"name" binding:"required"`
+	IsAdmin     bool   `json:"is_admin" bson:"is_admin"`
+	Avatar      string `json:"avatar" bson:"avatar"`
+	AccessToken string `json:"access_token"`
 }
 
 func (u *UserRequest) Validate() *error {

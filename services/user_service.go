@@ -36,7 +36,7 @@ func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, r
 	return user, nil
 }
 
-//FindUsers mendapatkan users dari domain
+//FindUsers mendapatkan user_handler dari domain
 func (u *userService) FindUsers() (users.UserResponseList, rest_err.APIError) {
 	userList, err := users.UserDao.FindUser()
 	if err != nil {
@@ -92,14 +92,25 @@ func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginRespo
 		return nil, rest_err.NewUnauthorizedError("Username atau password tidak valid")
 	}
 
-	token, err := mjwt.Obj.GenerateToken(user.Email, user.IsAdmin)
+	claims := mjwt.CustomClaim{
+		Identity:  user.Email,
+		Name:      user.Name,
+		IsAdmin:   user.IsAdmin,
+		TimeExtra: 1,
+		Jti:       "",
+	}
+
+	token, err := mjwt.Obj.GenerateToken(claims)
+	if err != nil {
+		return nil, err
+	}
 
 	userResponse := users.UserLoginResponse{
-		Name:    user.Name,
-		Email:   user.Email,
-		IsAdmin: user.IsAdmin,
-		Avatar:  user.Avatar,
-		Token:   token,
+		Name:        user.Name,
+		Email:       user.Email,
+		IsAdmin:     user.IsAdmin,
+		Avatar:      user.Avatar,
+		AccessToken: token,
 	}
 
 	return &userResponse, nil
