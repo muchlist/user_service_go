@@ -13,7 +13,7 @@ func init() {
 	router = gin.Default()
 }
 
-// StartApp memulai http server
+// StartApp memulai gin http server
 func StartApp() {
 
 	client, ctx, cancel := db.Init()

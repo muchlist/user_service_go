@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 )
 
-//Get mengembalikan user
+//Get menampilkan user berdasarkan ID (bukan email)
 func Get(c *gin.Context) {
 	userID, err := primitive.ObjectIDFromHex(c.Param("user_id"))
 	if err != nil {
@@ -76,7 +76,7 @@ func Find(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"users": userList})
 }
 
-//Edit menampilkan list user
+//Edit mengedit user oleh admin
 func Edit(c *gin.Context) {
 
 	var user users.UserEditRequest
@@ -95,7 +95,7 @@ func Edit(c *gin.Context) {
 	c.JSON(http.StatusOK, userEdited)
 }
 
-//Delete menghapus user
+//Delete menghapus user, idealnya melalui middleware is_admin
 func Delete(c *gin.Context) {
 
 	claims := c.MustGet(mjwt.CLAIMS).(*mjwt.CustomClaim)
@@ -157,7 +157,7 @@ func ResetPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"msg": fmt.Sprintf("Password user %s berhasil di reset!", c.Param("user_email"))})
 }
 
-//Login
+//Login login
 func Login(c *gin.Context) {
 
 	var login users.UserLoginRequest
@@ -176,6 +176,8 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+//UploadImage melakukan pengambilan file menggunakan form "avatar" mengecek ekstensi dan memasukkannya ke database
+//sesuai authorisasi aktif. File disimpan di folder static/images dengan nama file == jwt.identity alias email
 func UploadImage(c *gin.Context) {
 
 	claims := c.MustGet(mjwt.CLAIMS).(*mjwt.CustomClaim)

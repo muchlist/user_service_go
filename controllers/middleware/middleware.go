@@ -12,6 +12,7 @@ const (
 	bearerKey = "Bearer"
 )
 
+//AuthMiddleware memvalidasi token JWT, mengembalikan claims berupa pointer mjwt.CustomClaims
 func AuthMiddleware(c *gin.Context) {
 
 	authHeader := c.GetHeader(headerKey)
@@ -43,6 +44,8 @@ func AuthMiddleware(c *gin.Context) {
 	c.Set(mjwt.CLAIMS, claims)
 }
 
+//AuthAdminMiddleware memvalidasi token JWT, mengembalikan claims berupa pointer mjwt.CustomClaims
+//perbedaannya dengan AuthMidlleware adalah ini mengharuskan pengakses berstatus is_admin true
 func AuthAdminMiddleware(c *gin.Context) {
 
 	authHeader := c.GetHeader(headerKey)
