@@ -208,7 +208,7 @@ func UploadImage(c *gin.Context) {
 		return
 	}
 
-	usersResult, apiErr := users.UserDao.PutAvatar(claims.Identity, pathInDb)
+	usersResult, apiErr := services.UserService.PutAvatar(claims.Identity, pathInDb)
 	if apiErr != nil {
 		c.JSON(apiErr.Status(), apiErr)
 		return
