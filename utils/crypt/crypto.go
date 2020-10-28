@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	//Obj penamaan standar untuk global variabel yang mengimplementasikan interface di dalam package
 	Obj cryptoInterface
 )
 
