@@ -32,12 +32,11 @@ const (
 )
 
 var (
-	//UserDao public
+	//UserDao variable global untuk entity user
 	UserDao userDaoInterface
 )
 
 func init() {
-	//untuk keperluan testing sehingga dibuat interface
 	UserDao = &userDao{}
 }
 
@@ -85,7 +84,8 @@ func (u *userDao) InsertUser(user UserRequest) (*string, rest_err.APIError) {
 	return &insertID, nil
 }
 
-//GetUser mendapatkan user dari database berdasarkan userID
+//GetUser mendapatkan user dari database berdasarkan userID, jarang digunakan
+//pada case ini biasanya menggunakan email karena user yang digunakan adalah email
 func (u *userDao) GetUserByID(userID primitive.ObjectID) (*UserResponse, rest_err.APIError) {
 
 	coll := db.Db.Collection(keyUserColl)
@@ -137,7 +137,8 @@ func (u *userDao) GetUserByEmail(email string) (*UserResponse, rest_err.APIError
 	return &user, nil
 }
 
-//GetUserByEmail mendapatkan user dari database berdasarkan email
+//GetUserByEmail mendapatkan user dari database berdasarkan email dengan memunculkan passwordhash
+//password hash digunakan pada endpoint login dan change password
 func (u *userDao) GetUserByEmailWithPassword(email string) (*User, rest_err.APIError) {
 
 	coll := db.Db.Collection(keyUserColl)
@@ -162,7 +163,7 @@ func (u *userDao) GetUserByEmailWithPassword(email string) (*User, rest_err.APIE
 	return &user, nil
 }
 
-//FindUser mendapatkan user dari database berdasarkan userID
+//FindUser mendapatkan daftar semua user dari database
 func (u *userDao) FindUser() (UserResponseList, rest_err.APIError) {
 
 	coll := db.Db.Collection(keyUserColl)
@@ -188,7 +189,7 @@ func (u *userDao) FindUser() (UserResponseList, rest_err.APIError) {
 	return users, nil
 }
 
-//CheckEmailAvailable melakukan pengecekan apakah alamat email sdh pernah ada di database
+//CheckEmailAvailable melakukan pengecekan apakah alamat email sdh terdaftar di database
 //jika ada akan return false ,yang artinya email tidak available
 func (u *userDao) CheckEmailAvailable(email string) (bool, rest_err.APIError) {
 
@@ -215,6 +216,7 @@ func (u *userDao) CheckEmailAvailable(email string) (bool, rest_err.APIError) {
 	return false, nil
 }
 
+//EditUser mengubah user, memerlukan timestamp int64 agar lebih safety pada saat pengeditan oleh dua user
 func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*UserResponse, rest_err.APIError) {
 	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
@@ -249,6 +251,7 @@ func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*User
 	return &user, nil
 }
 
+//DeleteUser menghapus user
 func (u *userDao) DeleteUser(userEmail string) rest_err.APIError {
 	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
@@ -271,6 +274,7 @@ func (u *userDao) DeleteUser(userEmail string) rest_err.APIError {
 	return nil
 }
 
+//PutAvatar hanya mengubah avatar berdasarkan filter email
 func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_err.APIError) {
 	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
@@ -303,6 +307,7 @@ func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_er
 	return &user, nil
 }
 
+//ChangePassword merubah hash_pw dengan password baru sesuai masukan
 func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIError {
 	coll := db.Db.Collection(keyUserColl)
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
