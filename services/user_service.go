@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	// UserService publik
+	// UserService variabel publik
 	UserService userServiceInterface = &userService{}
 )
 
@@ -39,16 +39,16 @@ func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, r
 	return user, nil
 }
 
-//GetUserByEmail mendapatkan user dari domain
+//GetUserByEmail mendapatkan user berdasarkan email
 func (u *userService) GetUserByEmail(email string) (*users.UserResponse, rest_err.APIError) {
-	user, err := users.UserDao.GetUserByEmail(email)
+	user, err := users.UserDao.GetUserByEmail(strings.ToLower(email))
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
 }
 
-//FindUsers mendapatkan user dari domain
+//FindUsers
 func (u *userService) FindUsers() (users.UserResponseList, rest_err.APIError) {
 	userList, err := users.UserDao.FindUser()
 	if err != nil {
@@ -57,7 +57,10 @@ func (u *userService) FindUsers() (users.UserResponseList, rest_err.APIError) {
 	return userList, nil
 }
 
+//InsertUser melakukan register user semua email yang di registrasikan diubah menjadi lowercase di tahap ini
 func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIError) {
+
+	user.Email = strings.ToLower(user.Email)
 
 	// cek ketersediaan email
 	emailAvailable, err := users.UserDao.CheckEmailAvailable(user.Email)
@@ -84,6 +87,7 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 	return insertedID, nil
 }
 
+//EditUser
 func (u *userService) EditUser(userEmail string, request users.UserEditRequest) (*users.UserResponse, rest_err.APIError) {
 	result, err := users.UserDao.EditUser(strings.ToLower(userEmail), request)
 	if err != nil {
@@ -92,6 +96,7 @@ func (u *userService) EditUser(userEmail string, request users.UserEditRequest) 
 	return result, nil
 }
 
+//DeleteUser
 func (u *userService) DeleteUser(email string) rest_err.APIError {
 	err := users.UserDao.DeleteUser(email)
 	if err != nil {
@@ -101,7 +106,10 @@ func (u *userService) DeleteUser(email string) rest_err.APIError {
 	return nil
 }
 
+//Login
 func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError) {
+
+	login.Email = strings.ToLower(login.Email)
 
 	user, err := users.UserDao.GetUserByEmailWithPassword(login.Email)
 	if err != nil {
@@ -137,7 +145,11 @@ func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginRespo
 
 }
 
+//PutAvatar memasukkan lokasi file (path) ke dalam database user
 func (u *userService) PutAvatar(email string, fileLocation string) (*users.UserResponse, rest_err.APIError) {
+
+	email = strings.ToLower(email)
+
 	user, err := users.UserDao.PutAvatar(email, fileLocation)
 	if err != nil {
 		return nil, err
@@ -146,6 +158,7 @@ func (u *userService) PutAvatar(email string, fileLocation string) (*users.UserR
 	return user, nil
 }
 
+//ChangePassword melakukan perbandingan hashpassword lama dan memasukkan hashpassword baru ke database
 func (u *userService) ChangePassword(data users.UserChangePasswordRequest) rest_err.APIError {
 
 	if data.Password == data.NewPassword {
@@ -175,7 +188,10 @@ func (u *userService) ChangePassword(data users.UserChangePasswordRequest) rest_
 	return nil
 }
 
+//ResetPassword . inputan password berada di level controller
 func (u *userService) ResetPassword(data users.UserChangePasswordRequest) rest_err.APIError {
+
+	data.Email = strings.ToLower(data.Email)
 
 	newPasswordHash, err := crypt.Obj.GenerateHash(data.NewPassword)
 	if err != nil {
