@@ -19,8 +19,15 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="rename handler to controller">
+    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="login Expired time set to 30 days">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/url_mappings.go" beforeDir="false" afterPath="$PROJECT_DIR$/app/url_mappings.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/middleware/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/middleware/middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/user_controller/user_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/user_controller/user_controller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domains/users/user_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/domains/users/user_dao.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domains/users/user_dto.go" beforeDir="false" afterPath="$PROJECT_DIR$/domains/users/user_dto.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/crypt/crypto.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/crypt/crypto.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +166,8 @@
     <MESSAGE value="upload avatar endpoint" />
     <MESSAGE value="router static for image" />
     <MESSAGE value="rename handler to controller" />
-    <option name="LAST_COMMIT_MESSAGE" value="rename handler to controller" />
+    <MESSAGE value="login Expired time set to 30 days" />
+    <option name="LAST_COMMIT_MESSAGE" value="login Expired time set to 30 days" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -193,10 +201,10 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="184" y="28" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1603666136415" />
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1603812926680">
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1603813020147">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1603812926680" />
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1603813020147" />
     <state x="262" y="-1" width="840" height="1034" key="search.everywhere.popup" timestamp="1603681422237">
       <screen x="0" y="0" width="1366" height="768" />
     </state>

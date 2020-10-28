@@ -31,6 +31,19 @@ func Get(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+//GetProfile mengembalikan user yang sedang login
+func GetProfile(c *gin.Context) {
+	claims := c.MustGet(mjwt.CLAIMS).(*mjwt.CustomClaim)
+
+	user, apiErr := services.UserService.GetUserByEmail(claims.Identity)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 //Insert menambahkan user
 func Insert(c *gin.Context) {
 
@@ -80,6 +93,68 @@ func Edit(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, userEdited)
+}
+
+//Delete menghapus user
+func Delete(c *gin.Context) {
+
+	claims := c.MustGet(mjwt.CLAIMS).(*mjwt.CustomClaim)
+	emailParams := c.Param("user_email")
+
+	if claims.Identity == emailParams {
+		apiErr := rest_err.NewBadRequestError("Tidak dapat menghapus akun terkait (diri sendiri)!")
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	apiErr := services.UserService.DeleteUser(emailParams)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"msg": fmt.Sprintf("user %s berhasil dihapus", emailParams)})
+}
+
+//ChangePassword mengganti password pada user sendiri
+func ChangePassword(c *gin.Context) {
+
+	claims := c.MustGet(mjwt.CLAIMS).(*mjwt.CustomClaim)
+
+	var user users.UserChangePasswordRequest
+	if err := c.ShouldBindJSON(&user); err != nil {
+		apiErr := rest_err.NewBadRequestError(err.Error())
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	//mengganti user email dengan user aktif
+	user.Email = claims.Identity
+
+	apiErr := services.UserService.ChangePassword(user)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"msg": "Password berhasil diubah!"})
+}
+
+//ResetPassword mengganti password oleh admin pada user tertentu
+func ResetPassword(c *gin.Context) {
+
+	data := users.UserChangePasswordRequest{
+		Email:       c.Param("user_email"),
+		NewPassword: "Password",
+	}
+
+	apiErr := services.UserService.ResetPassword(data)
+	if apiErr != nil {
+		c.JSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"msg": fmt.Sprintf("Password user %s berhasil di reset!", c.Param("user_email"))})
 }
 
 //Login

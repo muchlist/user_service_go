@@ -52,7 +52,9 @@ type userDaoInterface interface {
 	FindUser() (UserResponseList, rest_err.APIError)
 	CheckEmailAvailable(email string) (bool, rest_err.APIError)
 	EditUser(userEmail string, userRequest UserEditRequest) (*UserResponse, rest_err.APIError)
+	DeleteUser(userEmail string) rest_err.APIError
 	PutAvatar(email string, avatar string) (*UserResponse, rest_err.APIError)
+	ChangePassword(data UserChangePasswordRequest) rest_err.APIError
 }
 
 //InsertUser menambahkan user
@@ -228,7 +230,6 @@ func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*User
 	update := bson.M{
 		"$set": bson.M{
 			keyName:      userRequest.Name,
-			keyAvatar:    userRequest.Avatar,
 			keyIsAdmin:   userRequest.IsAdmin,
 			keyTimeStamp: time.Now().Unix(),
 		},
@@ -246,6 +247,28 @@ func (u *userDao) EditUser(userEmail string, userRequest UserEditRequest) (*User
 	}
 
 	return &user, nil
+}
+
+func (u *userDao) DeleteUser(userEmail string) rest_err.APIError {
+	coll := db.Db.Collection(keyUserColl)
+	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
+	defer cancel()
+
+	filter := bson.M{
+		keyEmail: userEmail,
+	}
+
+	if _, err := coll.DeleteOne(ctx, filter); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return rest_err.NewBadRequestError("User tidak dihapus karena ID tidak valid")
+		}
+
+		logger.Error("Gagal menghapus user dari database", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
+		return apiErr
+	}
+
+	return nil
 }
 
 func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_err.APIError) {
@@ -278,4 +301,37 @@ func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_er
 	}
 
 	return &user, nil
+}
+
+func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIError {
+	coll := db.Db.Collection(keyUserColl)
+	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
+	defer cancel()
+
+	opts := options.FindOneAndUpdate()
+	opts.SetReturnDocument(1)
+
+	filter := bson.M{
+		keyEmail: data.Email,
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			keyHashPw:    data.NewPassword,
+			keyTimeStamp: time.Now().Unix(),
+		},
+	}
+
+	var user UserResponse
+	if err := coll.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, password salah"))
+		}
+
+		logger.Error("Gagal mendapatkan user dari database (ChangePassword)", err)
+		apiErr := rest_err.NewInternalServerError("Gagal mengganti password user", err)
+		return apiErr
+	}
+
+	return nil
 }

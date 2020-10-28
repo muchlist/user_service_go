@@ -1,8 +1,6 @@
 package services
 
 import (
-	"errors"
-	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
 	"github.com/muchlist/user_service_go/domains/users"
 	"github.com/muchlist/user_service_go/utils/crypt"
@@ -21,16 +19,29 @@ type userService struct{}
 
 type userServiceInterface interface {
 	GetUser(primitive.ObjectID) (*users.UserResponse, rest_err.APIError)
+	GetUserByEmail(email string) (*users.UserResponse, rest_err.APIError)
 	InsertUser(users.UserRequest) (*string, rest_err.APIError)
 	FindUsers() (users.UserResponseList, rest_err.APIError)
 	EditUser(string, users.UserEditRequest) (*users.UserResponse, rest_err.APIError)
+	DeleteUser(email string) rest_err.APIError
 	Login(users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError)
 	PutAvatar(email string, fileLocation string) (*users.UserResponse, rest_err.APIError)
+	ChangePassword(data users.UserChangePasswordRequest) rest_err.APIError
+	ResetPassword(data users.UserChangePasswordRequest) rest_err.APIError
 }
 
 //GetUser mendapatkan user dari domain
 func (u *userService) GetUser(userID primitive.ObjectID) (*users.UserResponse, rest_err.APIError) {
 	user, err := users.UserDao.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+//GetUserByEmail mendapatkan user dari domain
+func (u *userService) GetUserByEmail(email string) (*users.UserResponse, rest_err.APIError) {
+	user, err := users.UserDao.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +69,9 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 	}
 	// END cek ketersediaan email
 
-	hashPassword, errC := crypt.Obj.GenerateHash(user.Password)
-	if errC != nil {
-		logger.Error("Error pada kriptograpi", errC)
-		return nil, rest_err.NewInternalServerError("Error pada kriptograpi", errors.New("bcrypt error"))
+	hashPassword, err := crypt.Obj.GenerateHash(user.Password)
+	if err != nil {
+		return nil, err
 	}
 
 	user.Password = hashPassword
@@ -80,6 +90,15 @@ func (u *userService) EditUser(userEmail string, request users.UserEditRequest) 
 		return nil, err
 	}
 	return result, nil
+}
+
+func (u *userService) DeleteUser(email string) rest_err.APIError {
+	err := users.UserDao.DeleteUser(email)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (u *userService) Login(login users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError) {
@@ -125,4 +144,49 @@ func (u *userService) PutAvatar(email string, fileLocation string) (*users.UserR
 	}
 
 	return user, nil
+}
+
+func (u *userService) ChangePassword(data users.UserChangePasswordRequest) rest_err.APIError {
+
+	if data.Password == data.NewPassword {
+		return rest_err.NewBadRequestError("Gagal mengganti password, password tidak boleh sama dengan sebelumnya!")
+	}
+
+	userResult, err := users.UserDao.GetUserByEmailWithPassword(data.Email)
+	if err != nil {
+		return err
+	}
+
+	if !crypt.Obj.IsPWAndHashPWMatch(data.Password, userResult.HashPw) {
+		return rest_err.NewBadRequestError("Gagal mengganti password, password salah!")
+	}
+
+	newPasswordHash, err := crypt.Obj.GenerateHash(data.NewPassword)
+	if err != nil {
+		return err
+	}
+	data.NewPassword = newPasswordHash
+
+	err = users.UserDao.ChangePassword(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *userService) ResetPassword(data users.UserChangePasswordRequest) rest_err.APIError {
+
+	newPasswordHash, err := crypt.Obj.GenerateHash(data.NewPassword)
+	if err != nil {
+		return err
+	}
+	data.NewPassword = newPasswordHash
+
+	err = users.UserDao.ChangePassword(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

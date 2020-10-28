@@ -42,3 +42,40 @@ func AuthMiddleware(c *gin.Context) {
 
 	c.Set(mjwt.CLAIMS, claims)
 }
+
+func AuthAdminMiddleware(c *gin.Context) {
+
+	authHeader := c.GetHeader(headerKey)
+	if !strings.Contains(authHeader, bearerKey) {
+		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
+		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	tokenString := strings.Split(authHeader, " ")
+	if len(tokenString) != 2 {
+		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
+		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	token, err := mjwt.Obj.ValidateToken(tokenString[1])
+	if err != nil {
+		c.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	claims, err := mjwt.Obj.ReadToken(token)
+	if err != nil {
+		c.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	if !claims.IsAdmin {
+		apiErr := rest_err.NewUnauthorizedError("Unauthorized, memerlukan hak akses admin")
+		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
+		return
+	}
+
+	c.Set(mjwt.CLAIMS, claims)
+}

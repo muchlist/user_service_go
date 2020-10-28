@@ -41,7 +41,6 @@ type UserRequest struct {
 type UserEditRequest struct {
 	Name            string `json:"name" bson:"name" binding:"required"`
 	IsAdmin         bool   `json:"is_admin" bson:"is_admin"`
-	Avatar          string `json:"avatar" bson:"avatar"`
 	TimestampFilter int64  `json:"timestamp_filter" bson:"timestamp" binding:"required"`
 }
 
@@ -49,6 +48,13 @@ type UserEditRequest struct {
 type UserLoginRequest struct {
 	Email    string `json:"email" bson:"email" binding:"required,email"`
 	Password string `json:"password" bson:"password" binding:"required,min=3,max=20"`
+}
+
+//UserChangePasswordRequest struck untuk mencari email dengan password lama
+type UserChangePasswordRequest struct {
+	Email       string `json:"email"`
+	Password    string `json:"password" binding:"required,min=3,max=20"`
+	NewPassword string `json:"new_password" binding:"required,min=3,max=20"`
 }
 
 //UserLoginResponse
