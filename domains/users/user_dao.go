@@ -213,7 +213,8 @@ func (u *userDao) CheckEmailAvailable(email string) (bool, rest_err.APIError) {
 		return false, apiErr
 	}
 
-	return false, nil
+	apiErr := rest_err.NewBadRequestError("Email tidak tersedia")
+	return false, apiErr
 }
 
 //EditUser mengubah user, memerlukan timestamp int64 agar lebih safety pada saat pengeditan oleh dua user
@@ -261,14 +262,19 @@ func (u *userDao) DeleteUser(userEmail string) rest_err.APIError {
 		keyEmail: userEmail,
 	}
 
-	if _, err := coll.DeleteOne(ctx, filter); err != nil {
+	result, err := coll.DeleteOne(ctx, filter)
+	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return rest_err.NewBadRequestError("User tidak dihapus karena ID tidak valid")
+			return rest_err.NewBadRequestError("User gagal dihapus, dokumen tidak ditemukan")
 		}
 
 		logger.Error("Gagal menghapus user dari database", err)
 		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
 		return apiErr
+	}
+
+	if result.DeletedCount == 0 {
+		return rest_err.NewBadRequestError("User gagal dihapus, dokumen tidak ditemukan")
 	}
 
 	return nil
@@ -313,9 +319,6 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 	ctx, cancel := context.WithTimeout(context.Background(), connectTimeout*time.Second)
 	defer cancel()
 
-	opts := options.FindOneAndUpdate()
-	opts.SetReturnDocument(1)
-
 	filter := bson.M{
 		keyEmail: data.Email,
 	}
@@ -327,15 +330,19 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 		},
 	}
 
-	var user UserResponse
-	if err := coll.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user); err != nil {
+	result, err := coll.UpdateOne(ctx, filter, update)
+	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, password salah"))
+			return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, email salah"))
 		}
 
 		logger.Error("Gagal mendapatkan user dari database (ChangePassword)", err)
 		apiErr := rest_err.NewInternalServerError("Gagal mengganti password user", err)
 		return apiErr
+	}
+
+	if result.ModifiedCount == 0 {
+		return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, email salah"))
 	}
 
 	return nil
