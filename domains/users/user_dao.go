@@ -56,7 +56,7 @@ type userDaoInterface interface {
 	ChangePassword(data UserChangePasswordRequest) rest_err.APIError
 }
 
-//InsertUser menambahkan user
+//InsertUser menambahkan user dan mengembalikan insertedID, err
 func (u *userDao) InsertUser(user UserRequest) (*string, rest_err.APIError) {
 
 	coll := db.Db.Collection(keyUserColl)
@@ -302,7 +302,7 @@ func (u *userDao) PutAvatar(email string, avatar string) (*UserResponse, rest_er
 	var user UserResponse
 	if err := coll.FindOneAndUpdate(ctx, filter, update, opts).Decode(&user); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, rest_err.NewBadRequestError(fmt.Sprintf("User avatar gagal, user dengan email %s tidak ditemukan", email))
+			return nil, rest_err.NewBadRequestError(fmt.Sprintf("User avatar gagal diupload, user dengan email %s tidak ditemukan", email))
 		}
 
 		logger.Error("Gagal mendapatkan user dari database", err)

@@ -22,7 +22,7 @@ type userServiceInterface interface {
 	GetUserByEmail(email string) (*users.UserResponse, rest_err.APIError)
 	InsertUser(users.UserRequest) (*string, rest_err.APIError)
 	FindUsers() (users.UserResponseList, rest_err.APIError)
-	EditUser(string, users.UserEditRequest) (*users.UserResponse, rest_err.APIError)
+	EditUser(email string, userEdit users.UserEditRequest) (*users.UserResponse, rest_err.APIError)
 	DeleteUser(email string) rest_err.APIError
 	Login(users.UserLoginRequest) (*users.UserLoginResponse, rest_err.APIError)
 	PutAvatar(email string, fileLocation string) (*users.UserResponse, rest_err.APIError)
@@ -63,12 +63,9 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 	user.Email = strings.ToLower(user.Email)
 
 	// cek ketersediaan email
-	emailAvailable, err := users.UserDao.CheckEmailAvailable(user.Email)
+	_, err := users.UserDao.CheckEmailAvailable(user.Email)
 	if err != nil {
 		return nil, err
-	}
-	if !emailAvailable {
-		return nil, rest_err.NewBadRequestError("Email tidak tersedia")
 	}
 	// END cek ketersediaan email
 
@@ -88,8 +85,8 @@ func (u *userService) InsertUser(user users.UserRequest) (*string, rest_err.APIE
 }
 
 //EditUser
-func (u *userService) EditUser(userEmail string, request users.UserEditRequest) (*users.UserResponse, rest_err.APIError) {
-	result, err := users.UserDao.EditUser(strings.ToLower(userEmail), request)
+func (u *userService) EditUser(email string, request users.UserEditRequest) (*users.UserResponse, rest_err.APIError) {
+	result, err := users.UserDao.EditUser(strings.ToLower(email), request)
 	if err != nil {
 		return nil, err
 	}
@@ -180,15 +177,13 @@ func (u *userService) ChangePassword(data users.UserChangePasswordRequest) rest_
 	}
 	data.NewPassword = newPasswordHash
 
-	err = users.UserDao.ChangePassword(data)
-	if err != nil {
-		return err
-	}
+	_ = users.UserDao.ChangePassword(data)
 
 	return nil
 }
 
 //ResetPassword . inputan password berada di level controller
+//hanya memproses field newPassword, mengabaikan field password
 func (u *userService) ResetPassword(data users.UserChangePasswordRequest) rest_err.APIError {
 
 	data.Email = strings.ToLower(data.Email)

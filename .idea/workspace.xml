@@ -19,10 +19,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="optimizer query mongodb">
-      <change afterPath="$PROJECT_DIR$/services/user_service_test.go" afterDir="false" />
+    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="test get user dan get user by email">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/mjwt/my_jwt_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/mjwt/my_jwt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domains/users/user_dao.go" beforeDir="false" afterPath="$PROJECT_DIR$/domains/users/user_dao.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/user_service_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/user_service_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,8 +68,8 @@
       <recent name="D:\CODING\user_service_go\controllers\users" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.go test github.com/muchlist/user_service_go/services">
-    <configuration name="TestUserService_GetUserByEmail_Found in github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Test.go test github.com/muchlist/user_service_go/utils/mjwt">
+    <configuration name="TestUserService_ChangePassword_EmailWrong in github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="user_service_go" />
       <working_directory value="$PROJECT_DIR$/services" />
       <framework value="gotest" />
@@ -76,10 +77,10 @@
       <package value="github.com/muchlist/user_service_go/services" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestUserService_GetUserByEmail_Found\E$" />
+      <pattern value="^\QTestUserService_ChangePassword_EmailWrong\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestUserService_GetUserByEmail_NotFound in github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestUserService_ResetPassword_EmailNotFound in github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="user_service_go" />
       <working_directory value="$PROJECT_DIR$/services" />
       <framework value="gotest" />
@@ -87,18 +88,7 @@
       <package value="github.com/muchlist/user_service_go/services" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestUserService_GetUserByEmail_NotFound\E$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestUserService_GetUser_NoUserFound in github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="user_service_go" />
-      <working_directory value="$PROJECT_DIR$/services" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/muchlist/user_service_go/services" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <pattern value="^\QTestUserService_GetUser_NoUserFound\E$" />
+      <pattern value="^\QTestUserService_ResetPassword_EmailNotFound\E$" />
       <method v="2" />
     </configuration>
     <configuration name="go test github.com/muchlist/user_service_go/services" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -107,6 +97,16 @@
       <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="github.com/muchlist/user_service_go/services" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test github.com/muchlist/user_service_go/utils/crypt" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="user_service_go" />
+      <working_directory value="$PROJECT_DIR$/utils/crypt" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/muchlist/user_service_go/utils/crypt" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <method v="2" />
@@ -123,11 +123,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.go test github.com/muchlist/user_service_go/services" />
-        <item itemvalue="Go Test.TestUserService_GetUserByEmail_NotFound in github.com/muchlist/user_service_go/services" />
-        <item itemvalue="Go Test.TestUserService_GetUserByEmail_Found in github.com/muchlist/user_service_go/services" />
-        <item itemvalue="Go Test.TestUserService_GetUser_NoUserFound in github.com/muchlist/user_service_go/services" />
         <item itemvalue="Go Test.go test github.com/muchlist/user_service_go/utils/mjwt" />
+        <item itemvalue="Go Test.go test github.com/muchlist/user_service_go/utils/crypt" />
+        <item itemvalue="Go Test.go test github.com/muchlist/user_service_go/services" />
+        <item itemvalue="Go Test.TestUserService_ResetPassword_EmailNotFound in github.com/muchlist/user_service_go/services" />
+        <item itemvalue="Go Test.TestUserService_ChangePassword_EmailWrong in github.com/muchlist/user_service_go/services" />
       </list>
     </recent_temporary>
   </component>
@@ -167,7 +167,8 @@
     <MESSAGE value="service dokumentasi" />
     <MESSAGE value="user controller mengakses langsung ke dao, fixed" />
     <MESSAGE value="optimizer query mongodb" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimizer query mongodb" />
+    <MESSAGE value="test get user dan get user by email" />
+    <option name="LAST_COMMIT_MESSAGE" value="test get user dan get user by email" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -177,26 +178,26 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="229" y="94" key="DiffContextDialog/0.0.1366.768@0.0.1366.768" timestamp="1603812922405" />
-    <state x="463" y="138" key="FileChooserDialogImpl" timestamp="1603695408811">
+    <state x="463" y="138" key="FileChooserDialogImpl" timestamp="1603958029440">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="463" y="138" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1603695408811" />
-    <state width="1311" height="210" key="GridCell.Tab.0.bottom" timestamp="1603951078695">
+    <state x="463" y="138" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1603958029440" />
+    <state width="1311" height="210" key="GridCell.Tab.0.bottom" timestamp="1603960567241">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1603951078695" />
-    <state width="1311" height="210" key="GridCell.Tab.0.center" timestamp="1603951078695">
+    <state width="1311" height="210" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1603960567241" />
+    <state width="1311" height="210" key="GridCell.Tab.0.center" timestamp="1603960567241">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1603951078695" />
-    <state width="1311" height="210" key="GridCell.Tab.0.left" timestamp="1603951078695">
+    <state width="1311" height="210" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1603960567241" />
+    <state width="1311" height="210" key="GridCell.Tab.0.left" timestamp="1603960567241">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1603951078695" />
-    <state width="1311" height="210" key="GridCell.Tab.0.right" timestamp="1603951078695">
+    <state width="1311" height="210" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1603960567241" />
+    <state width="1311" height="210" key="GridCell.Tab.0.right" timestamp="1603960567241">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1603951078695" />
+    <state width="1311" height="210" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1603960567241" />
     <state x="184" y="28" key="SettingsEditor" timestamp="1603666136415">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
@@ -222,8 +223,8 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_services.out" NAME="go test github.com/muchlist/user_service_go/services Coverage Results" MODIFIED="1603951078527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_utils_mjwt.out" NAME="go test github.com/muchlist/user_service_go/utils/mjwt Coverage Results" MODIFIED="1603950239972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_utils_crypt.out" NAME="go test github.com/muchlist/user_service_go/utils/crypt Coverage Results" MODIFIED="1603950138478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_services.out" NAME="go test github.com/muchlist/user_service_go/services Coverage Results" MODIFIED="1603960546450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_utils_mjwt.out" NAME="go test github.com/muchlist/user_service_go/utils/mjwt Coverage Results" MODIFIED="1603960567209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/user_service_go$go_test_github_com_muchlist_user_service_go_utils_crypt.out" NAME="go test github.com/muchlist/user_service_go/utils/crypt Coverage Results" MODIFIED="1603960557701" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
