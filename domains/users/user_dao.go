@@ -334,7 +334,7 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 	result, err := coll.UpdateOne(ctx, filter, update)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return rest_err.NewBadRequestError(fmt.Sprint("Penggantian password gagal, email salah"))
+			return rest_err.NewBadRequestError("Penggantian password gagal, email salah")
 		}
 
 		logger.Error("Gagal mendapatkan user dari database (ChangePassword)", err)
@@ -343,7 +343,7 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 	}
 
 	if result.ModifiedCount == 0 {
-		return rest_err.NewBadRequestError(fmt.Sprint("Penggantian password gagal, email salah"))
+		return rest_err.NewBadRequestError("Penggantian password gagal, email salah")
 	}
 
 	return nil
