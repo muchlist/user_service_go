@@ -19,7 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="optimize test in my_jwt_test.go" />
+    <list default="true" id="37cfd4a2-0248-4ea6-a386-4c175932604c" name="Default Changelist" comment="remove unesecery fmt.sprint">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/middleware/middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/middleware/middleware.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -166,7 +169,8 @@
     <MESSAGE value="user service unit test" />
     <MESSAGE value="optimize anti pattern code" />
     <MESSAGE value="optimize test in my_jwt_test.go" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimize test in my_jwt_test.go" />
+    <MESSAGE value="remove unesecery fmt.sprint" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove unesecery fmt.sprint" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -184,30 +188,30 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="463" y="138" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1603958029440" />
-    <state width="1311" height="210" key="GridCell.Tab.0.bottom" timestamp="1607017840205">
+    <state width="1311" height="210" key="GridCell.Tab.0.bottom" timestamp="1607018989208">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1607017840205" />
-    <state width="1311" height="210" key="GridCell.Tab.0.center" timestamp="1607017840204">
+    <state width="1311" height="210" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1607018989208" />
+    <state width="1311" height="210" key="GridCell.Tab.0.center" timestamp="1607018989207">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1607017840204" />
-    <state width="1311" height="210" key="GridCell.Tab.0.left" timestamp="1607017840204">
+    <state width="1311" height="210" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1607018989207" />
+    <state width="1311" height="210" key="GridCell.Tab.0.left" timestamp="1607018989207">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1607017840204" />
-    <state width="1311" height="210" key="GridCell.Tab.0.right" timestamp="1607017840205">
+    <state width="1311" height="210" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1607018989207" />
+    <state width="1311" height="210" key="GridCell.Tab.0.right" timestamp="1607018989207">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1311" height="210" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1607017840205" />
+    <state width="1311" height="210" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1607018989207" />
     <state x="184" y="28" key="SettingsEditor" timestamp="1603666136415">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="184" y="28" key="SettingsEditor/0.0.1366.768@0.0.1366.768" timestamp="1603666136415" />
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1607017889596">
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2" timestamp="1607018266396">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1607017889596" />
+    <state x="275" y="72" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1607018266396" />
     <state x="262" y="-1" width="840" height="1034" key="search.everywhere.popup" timestamp="1603681422237">
       <screen x="0" y="0" width="1366" height="768" />
     </state>

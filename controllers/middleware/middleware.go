@@ -12,30 +12,17 @@ const (
 	bearerKey = "Bearer"
 )
 
+type role int
+
+const (
+	normalAuth role = iota
+	adminAuth
+)
+
 //AuthMiddleware memvalidasi token JWT, mengembalikan claims berupa pointer mjwt.CustomClaims
 func AuthMiddleware(c *gin.Context) {
-
 	authHeader := c.GetHeader(headerKey)
-	if !strings.Contains(authHeader, bearerKey) {
-		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
-		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
-		return
-	}
-
-	tokenString := strings.Split(authHeader, " ")
-	if len(tokenString) != 2 {
-		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
-		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
-		return
-	}
-
-	token, err := mjwt.Obj.ValidateToken(tokenString[1])
-	if err != nil {
-		c.AbortWithStatusJSON(err.Status(), err)
-		return
-	}
-
-	claims, err := mjwt.Obj.ReadToken(token)
+	claims, err := authValidator(authHeader, normalAuth)
 	if err != nil {
 		c.AbortWithStatusJSON(err.Status(), err)
 		return
@@ -49,36 +36,43 @@ func AuthMiddleware(c *gin.Context) {
 func AuthAdminMiddleware(c *gin.Context) {
 
 	authHeader := c.GetHeader(headerKey)
+	claims, err := authValidator(authHeader, adminAuth)
+	if err != nil {
+		c.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	c.Set(mjwt.CLAIMS, claims)
+}
+
+func authValidator(authHeader string, role role) (*mjwt.CustomClaim, rest_err.APIError) {
 	if !strings.Contains(authHeader, bearerKey) {
 		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
-		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
-		return
+		return nil, apiErr
 	}
 
 	tokenString := strings.Split(authHeader, " ")
 	if len(tokenString) != 2 {
 		apiErr := rest_err.NewUnauthorizedError("Unauthorized")
-		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
-		return
+		return nil, apiErr
 	}
 
 	token, err := mjwt.Obj.ValidateToken(tokenString[1])
 	if err != nil {
-		c.AbortWithStatusJSON(err.Status(), err)
-		return
+		return nil, err
 	}
 
 	claims, err := mjwt.Obj.ReadToken(token)
 	if err != nil {
-		c.AbortWithStatusJSON(err.Status(), err)
-		return
+		return nil, err
 	}
 
-	if !claims.IsAdmin {
-		apiErr := rest_err.NewUnauthorizedError("Unauthorized, memerlukan hak akses admin")
-		c.AbortWithStatusJSON(apiErr.Status(), apiErr)
-		return
+	if role == adminAuth {
+		if !claims.IsAdmin {
+			apiErr := rest_err.NewUnauthorizedError("Unauthorized, memerlukan hak akses admin")
+			return nil, apiErr
+		}
 	}
 
-	c.Set(mjwt.CLAIMS, claims)
+	return claims, nil
 }

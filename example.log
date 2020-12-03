@@ -1,3 +1,4 @@
 {"lvl":"info","time":"2020-11-15T09:30:51.865+0800","msg":"MongoDb berhasil terkoneksi!"}
 {"lvl":"error","time":"2020-11-15T09:31:50.226+0800","msg":"Gagal mendapatkan user dari database (GetUserByEmailWithPassword)","error":"connection() : auth error: sasl conversation error: unable to authenticate using mechanism \"SCRAM-SHA-1\": (AtlasError) Authentication failed."}
 {"lvl":"info","time":"2020-11-15T09:58:21.133+0800","msg":"MongoDb berhasil terkoneksi!"}
+{"lvl":"info","time":"2020-12-04T03:56:22.332+0800","msg":"MongoDb berhasil terkoneksi!"}
