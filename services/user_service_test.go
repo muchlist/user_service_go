@@ -488,7 +488,7 @@ func TestUserService_ResetPassword(t *testing.T) {
 
 func TestUserService_ResetPassword_EmailNotFound(t *testing.T) {
 	changePasswordFunction = func(data users.UserChangePasswordRequest) rest_err.APIError {
-		return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, email salah"))
+		return rest_err.NewBadRequestError(fmt.Sprint("Penggantian password gagal, email salah"))
 	}
 
 	data := users.UserChangePasswordRequest{

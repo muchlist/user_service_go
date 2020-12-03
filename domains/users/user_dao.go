@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"fmt"
 	"github.com/muchlist/erru_utils_go/logger"
 	"github.com/muchlist/erru_utils_go/rest_err"
@@ -156,7 +157,7 @@ func (u *userDao) GetUserByEmailWithPassword(email string) (*User, rest_err.APIE
 		}
 
 		logger.Error("Gagal mendapatkan user dari database (GetUserByEmailWithPassword)", err)
-		apiErr := rest_err.NewInternalServerError("Gagal mendapatkan user dari database", err)
+		apiErr := rest_err.NewInternalServerError("Error pada database", errors.New("database error"))
 		return nil, apiErr
 	}
 
@@ -333,7 +334,7 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 	result, err := coll.UpdateOne(ctx, filter, update)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, email salah"))
+			return rest_err.NewBadRequestError(fmt.Sprint("Penggantian password gagal, email salah"))
 		}
 
 		logger.Error("Gagal mendapatkan user dari database (ChangePassword)", err)
@@ -342,7 +343,7 @@ func (u *userDao) ChangePassword(data UserChangePasswordRequest) rest_err.APIErr
 	}
 
 	if result.ModifiedCount == 0 {
-		return rest_err.NewBadRequestError(fmt.Sprintf("Penggantian password gagal, email salah"))
+		return rest_err.NewBadRequestError(fmt.Sprint("Penggantian password gagal, email salah"))
 	}
 
 	return nil

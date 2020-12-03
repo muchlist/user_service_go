@@ -15,7 +15,6 @@ require (
 	github.com/ugorji/go v1.1.13 // indirect
 	go.mongodb.org/mongo-driver v1.4.2
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	golang.org/x/net v0.0.0-20201024042810-be3efd7ff127 // indirect
 	golang.org/x/sys v0.0.0-20201024232916-9f70ab9862d5 // indirect

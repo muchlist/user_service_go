@@ -38,8 +38,5 @@ func (c *cryptoObj) GenerateHash(password string) (string, rest_err.APIError) {
 //IsPWAndHashPWMatch return true jika inputan password dan hashpassword sesuai
 func (c *cryptoObj) IsPWAndHashPWMatch(password string, hashPass string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password))
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
