@@ -29,6 +29,7 @@ func TestJwtUtils_ValidateToken(t *testing.T) {
 	}
 
 	signedToken, err := Obj.GenerateToken(c)
+	assert.Nil(t, err)
 
 	tokenValid, err := Obj.ValidateToken(signedToken)
 
@@ -55,10 +56,11 @@ func TestJwtUtils_ExpiredValidateToken(t *testing.T) {
 	}
 
 	signedToken, err := Obj.GenerateToken(c)
+	assert.Nil(t, err)
 
 	tokenValid, err := Obj.ValidateToken(signedToken)
-
 	assert.Nil(t, tokenValid)
+
 	assert.NotNil(t, err)
 	assert.Equal(t, "Token tidak valid", err.Message())
 }
@@ -71,9 +73,10 @@ func TestJwtUtils_ReadToken(t *testing.T) {
 		TimeExtra: 0,
 	}
 	signedToken, err := Obj.GenerateToken(c)
+	assert.Nil(t, err)
 	tokenValid, err := Obj.ValidateToken(signedToken)
+	assert.Nil(t, err)
 	claims, err := Obj.ReadToken(tokenValid)
-
 	assert.Nil(t, err)
 
 	assert.Equal(t, "muchlis@gmail.com", claims.Identity)
